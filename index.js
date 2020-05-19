@@ -16,7 +16,9 @@ const express = require('express');
 
 const Actions = require('./data/helpers/actionModel.js');
 
-const Projects = ('./data/helpers/projectModel.js');
+const Projects = require('./data/helpers/projectModel.js');
+
+const server = express();
 
 server.use(express.json());
 
@@ -37,7 +39,7 @@ server.get('/', (req,res) => {
 //Get
 
 server.get('/api/actions', (req, res) => {
-    Actions.get(req.query)
+    Actions.get()
     .then(actions => {
         res.status(200).json(actions);
     })
@@ -51,7 +53,7 @@ server.get('/api/actions', (req, res) => {
 // Get by ID
 
 server.get('/api/actions/:id', (req, res) => {
-    Actions.get(req.query)
+    Actions.get(req.params.id)
     .then(action => {
         if(action) {
         res.status(200).json(action);
@@ -124,7 +126,7 @@ server.delete('/api/actions/:id', (req, res) => {
 //Get
 
 server.get('/api/projects', (req, res) => {
-    Projects.get(req.query)
+    Projects.get()
     .then(projects => {
         res.status(200).json(projects);
     })
@@ -149,7 +151,7 @@ server.get('/api/projects/:id', (req, res) => {
         }
     })
     .catch(error => {
-        console.logy(error);
+        console.log(error);
         res.status(500).json({
             message: 'The project information could not be retrieved.'
         })
@@ -157,8 +159,9 @@ server.get('/api/projects/:id', (req, res) => {
 })
 // Get project actions
 
-server.get('/api/projects/:id', (req, res) => {
-    Projects.getProjectActions(req.query)
+server.get('/api/projects/:id/actions', (req, res) => {
+    console.log(req.params.id)
+    Projects.getProjectActions(req.params.id)
     .then(project => {
         if(project) {
         res.status(200).json(project);
@@ -169,7 +172,7 @@ server.get('/api/projects/:id', (req, res) => {
         }
     })
     .catch(error => {
-        console.logy(error);
+        console.log(error);
         res.status(500).json({
             message: 'The project actions information could not be retrieved.'
         })
